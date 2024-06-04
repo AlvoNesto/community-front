@@ -1,5 +1,5 @@
 import React from 'react';
-import AuthService from '../services/AuthService';
+import AuthService from '../../services/AuthService';
 import { useNavigate } from 'react-router-dom';
 
 const Home = () => {

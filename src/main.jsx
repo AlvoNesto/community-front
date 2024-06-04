@@ -1,31 +1,31 @@
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import {
-  createBrowserRouter,
-  RouterProvider,
-  Route,
-  createRoutesFromElements,
-  Navigate
-} from 'react-router-dom';
-import Login from './components/Login';
-import Home from './components/Home';
-import AuthService from './services/AuthService';
+import Login from './modules/auth';
+import Home from './modules/home';
+import ProtectedRoute from './components/ProtectedRoute';
+import { AuthProvider } from './contexts/AuthContext';
+import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 
-const ProtectedRoute = ({ element }) => {
-  return AuthService.isAuthenticated() ? element : <Navigate to="/login" />;
-};
+const router = createBrowserRouter([
+  {
+    path: '/login',
+    element: <Login />,
+  },
+  {
+    path: '/',
+    element: (
+      <ProtectedRoute>
+        <Home />
+      </ProtectedRoute>
+    ),
+  },
+]);
 
-const routes = createRoutesFromElements(
-  <>
-    <Route path="/login" element={<Login />} />
-    <Route path="/" element={<ProtectedRoute element={<Home />} />} />
-  </>
-);
-
-const router = createBrowserRouter(routes);
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <AuthProvider>
+      <RouterProvider router={router} />
+    </AuthProvider>
   </React.StrictMode>
 );
